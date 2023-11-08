@@ -139,7 +139,92 @@ As a replacement to the SSH tunnels, the Konnectivity service provides TCP level
 
 """v1/Node""":
 
-    - 
+    - get
+    - list
+    - create
+    - update
+    - patch
+    - watch
+    - delete
+
+#### Route Controller
+
+- Listens to node object creation and configures routes appropriately. Requires Get access to Node objects.
+
+"""v1/Node""":
+
+    - get
+
+#### Service Controller
+
+- Watches for Service object create, update and delete events and then configures Endpoints for those Services appropriately.
+- Requires list and watch access to access services.
+- Requires patch and update access to update services
+
+"""v1/Service"""
+
+    - list
+    - get
+    - watch
+    - patch
+    - patch
+    - update
+
+#### Others
+
+- Requires access to create Event objects, and to ensure secure operation, it requires access to create ServiceAccounts.
+
+"""v1/Event"""
+
+    - create
+    - patch
+    - update
+
+"""v1/ServiceAccount"""
+
+    - create
+
+### cgroup v2
+
+- Next version of the Linux """cgroup""".
+- Provides a unified control system with enhanced resource management capabilities.
+
+Improvements over v1:
+
+    - Single unified hierarchy design in API
+    - Safer sub-tree delegation to containers
+    - Newer features like Pressure Stall Information
+    - Enhanced resource allocation management and isolation across multiple resources
+      - Unified accounting for different types of memory allocations (network memory, kernel memory, etc)
+      - Accounting for non-immediate resource changes such as page cache write backs
+
+Some Kubernetes features exclusively use cgroup v2 for enhanced resource management and isolation.
+
+### Container Runtime Interface (CRI)
+
+- Plugin interface which enables the kubelet to use a wide variety of container runtimes, without having a need to recompile the cluster components.
+- Need a working container runtime on each Node in your cluster, so that the kubelet can launch Pods and their containers.
+- Main protocol for the communication between the kubelet and Container Runtime.
+- Defines the main gRPC protocol for the communication between the node components kubelet and container runtime.
+
+#### The API
+
+- Kubelet acts as a client when connecting to the container runtime via gRPC. 
+- Runtime and image service endpoints have to be available in the container runtime, which can be configured separately within the kubelet by using the """--image-service-endpoint""".
+
+### Garbage Collection
+
+#### Owners and Dependents
+
+- Owner reference tell the control plane which objects are dependent on others.
+- Kubernetes uses owner references to give the control plane, and other API clients, the opportunity to clean up related resources before deleting an object.
+
+#### Cascading Deletion
+
+- Kubernetes checks for and deletes objects that no longer have owner references.
+- When you delete an object, you can control whether Kubernetes deletes the object's dependents automatically, in a process called cascading deletion.
+
+
 
 ## References
 
