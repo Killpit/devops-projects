@@ -140,3 +140,7 @@ As a replacement to the SSH tunnels, the Konnectivity service provides TCP level
 """v1/Node""":
 
     - 
+
+## References
+
+- https://kubernetes.io/docs/concepts/architecture/
