@@ -224,7 +224,53 @@ Some Kubernetes features exclusively use cgroup v2 for enhanced resource managem
 - Kubernetes checks for and deletes objects that no longer have owner references.
 - When you delete an object, you can control whether Kubernetes deletes the object's dependents automatically, in a process called cascading deletion.
 
+##### Foreground Cascading Deletion
 
+- The owner object you're deleting first enters a deletion in progress state. In this state, the following happens to the owner object:
+
+    - The Kubernetes API server sets the object's """metadata.deletionTimestamp""" field to the time the object was marked for deletion
+    - The Kubernetes API server also sets the """metadata.finalizers""" field to """foregroundDeletion"""
+    - The object remains visible through the Kubernetes API until the deletion process is complete
+
+- After the owner object enters the deletion in progress state, the controller deletes the dependents. After deleting all the dependent objects, the controller deletes the owner object. At this point, the object is no longer visible in the Kubernetes API.
+
+- During foreground cascading deletion, the only dependents that block owner deletion are those that have the """ownerReference.blockOwnerDeletion = true""" field. 
+
+##### Background cascading deletion
+
+- The Kubernetes API server deletes the owner object immediately and the controller cleans up the dependent objects in the background. By default, Kubernetes uses background cascading deletion unless you manually use foreground deletion or choose to orphan the deployment objects.
+
+##### Orphaned Dependents
+
+- When Kubernetes deletes an owner object, the dependents left behind are called orphan objects. By default, Kubernetes deletes dependent objects.
+
+#### Garbage Collection of Unused Containers and Images
+
+- Kubelet performs garbage collection on unused images every five minutes and on unused containers every minute. You should avoid using external garbage collection tools, as these can break the kubelet behavior and remove containers that should exist.
+- To configure options for unused container and image garbage collection, tune the kubelet using a configuration file and change the parameters related to garbage collection using the KubeletConfiguration resource type.
+
+#### Container Image Lifecycle
+
+- Kubernetes manages the lifecycle of all images through its image manager, which is part of the kubelet, with the cooperation of cadvisor. The kubelet considers the following disk usage limits when making garbage collection decisions:
+    
+    - """HighThresholdPercent"""
+    - """LowThresholdPercent"""
+
+- Disk usage above the configured """HighThresholdPercent""" value triggers garbage collection, which deletes images in order based on the last time they were used, starting with the oldest first. 
+- Kubelet deletes images until disk usage reaches the """LowThresholdPercent""" value.
+
+#### Container Garbage Collection
+
+- Kubelet garbage collects unused containers based on the following variables:
+
+    - """MinAge""": the minimum age at which the kubelet can garbage collect a container. Disable by setting to 0.
+    - """MaxPerPodContainer""": the maximum number of dead containers each Pod can have. Disable by setting to less than """0""".
+    - """MaxContainers""": the maximum number of dead containers the cluster can have. Disable by setting to less than """0""".
+
+### Mixed Version Proxy
+
+- Kubernetes 1.28 includes an alpha feature that lets an API server proxy as a resource requests to other peer API services. Useful where there are multiple API servers running different versions of Kubernetes in one cluster.
+- This enables cluster administrators to configure highly available clusters that can be upgraded more safely, by directing resource requests (made during the upgrade) to the correct kube-apiserver. That proxying prevents users from seeing unexpected 404 Not Found errors that stem from the upgrade process.
 
 ## References
 

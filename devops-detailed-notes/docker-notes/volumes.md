@@ -16,6 +16,11 @@
 - File or directory is referenced by its absolute path on the host machine.
 - Rely on the host machine's filesystem having a specific directory structure available.
 
+## Differences Between Volumes and Bind Mounts
+
+- Bind mounts rely on the host machine's filesystem having a specific directory structure available while volumes can be stored in a container
+- Volumes are better suited for more complex use cases while bind mounts are suited for simple use cases.
+
 ## References
 
 - https://docs.docker.com/storage/bind-mounts/
