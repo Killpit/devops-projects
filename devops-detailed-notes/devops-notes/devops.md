@@ -28,6 +28,12 @@ Continuous integration (CI) is used by developers to automate, merge and test co
 
 Continuous delivery (CD) is a process by which code is built, tested, and deployed to one of more test and production environments. Like CI, CD systems produce deployable artifacts. Automated release processes consume these artifacts to release new versions and fixes to existing systems. Systems that monitor and send alerts run continually to drive visibility into the entire CD process. 
 
+### Continuous Deployment
+
+- Removes the need for manual intervention.
+- Production release is not required
+- If tests pass, new code is approved and the deployment to production just happens.
+
 ### Version Control
 
 Version control manages code in versions - tracks revisions and change history to make code easy to review and recover. Git is usually used for this practice, although GitLab and BitBucket is commonly used by developers. They provide a clear process to merge code changes that happen in the same files, handle conflicts, and roll back changes to earlier states.
@@ -38,7 +44,19 @@ Agile highlights team collaboration, customer and user feedback, and high adapta
 
 ### Infrastructure as Code (IaC)
 
+- Managing and provisioning of infrastructure through code instead of manual processes
+- Configuration files are created that contain your infrastructure specifications, which makes it easier to edit and distribute configurations
+- Has declarative or imperative approach
 
+#### Declarative approach
+
+- Defines the desired state of the system, including what resource you need and any properties they should have, IaC tool configure it for you
+- Keeps a list of the current state of your system objects
+
+#### Imperative Approach
+
+- Defines the specific commands needed to achieve the desired configuration, and those commands then need to be executed in the correct order.
+- Imperative tool will require you to figure out how those changes should be applied
 
 # References
 
